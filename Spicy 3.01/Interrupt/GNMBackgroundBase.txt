@@ -1,0 +1,109 @@
+(StateCheck)
+@NullResponse @DeleteFlag(Glitter1Active)
+@NullResponse @DeleteFlag(Glitter2Active)
+@NullResponse @DeleteFlag(Glitter3Active)
+@NullResponse @SetFlag(DommeActive)
+@NullResponse @CallReturn(CR\ReadyAssistant.txt)
+@NullResponse @CallReturn(CR\StateCheck.txt)
+(Base)
+@NullResponse #BGImage 
+[1,one,turn on computer,access computer,computer,start computer]@NullResponse @Goto(Session) 	//Computer 
+[2,two,chores,trash]@NullResponse @Goto(Chores) 												//Trash Bin
+[3,three,press button,red,button,open door,door,dungeon,punishment]@NullResponse @Goto(Dungeon) 				//Red Bottun 
+[4,four,open books,books,settings]@NullResponse @Goto(Settings) 									//Books
+[5,five,bed,sign,post it,chair,comfy chair,fun]@NullResponse @Goto(Fun) 							//Comfy chair
+[6,six,drink,drink table,food stash,food,snack,open drawer]@NullResponse @Goto(Snack) 			//Drink table
+[7,seven,running shoes,exercise,run,sport,sports,shoes]@NullResponse @Goto(Exercise) 				//Shoes
+[8,eight,busy,work,study,homework]@NullResponse @Goto(BusyMode) 									//Desk
+[9,nine,phone,text,write,message]@NullResponse @Goto(Phone) 	 									//Phone
+[10,ten,shop,buy,purchase]@NullResponse @Goto(Shop) 										  	//Shop
+[11,eleven,repeat the rules,rules,houserules]@NullResponse @Goto(Rules) 							//Rules
+[hint]@NullResponse @Goto(Hint) 
+@DifferentAnswer @SystemMessage Input unrecognized, try with a number or type 'hint' #BGImage 
+*****************************************************************Session Test************************************************************************
+(Session)
+@SystemMessage @RT(You open your,You turn on the,You start the) computer and press the button that says connect to #DomHonorific #BGImage @RapidCodeOn
+@Variable[#DateDifference(TeaseSession,Hours)]>[14] @NullResponse @Goto(TestSession)
+@SystemMessage Contacting #DomHonorific .. #BGImage @Wait(#Random(2,5))
+@SystemMessage @RT(Connection Denied..,Connection Failed..,Connection was Denied) #BGImage
+@SystemMessage A message pops up on the screen saying: #BGImage
+@SystemMessage You had a session too recently #BGImage @Goto(StateCheck)
+(TestSession)
+@SystemMessage Contacting #DomHonorific .. #BGImage
+@NullResponse @RapidCodeOn
+@NullResponse @If[GNMPPoints]>[400]Then(Deny1)
+@Flag(VAnnoyed) @NullResponse @Goto(Deny2)
+@NullResponse @Goto(StartSession)
+(Deny1)
+@SystemMessage @RT(Access denied,Session denied,Connection denied) #BGImage
+@SystemMessage Number of punishment points are too high, report for punishment #BGImage @Goto(StateCheck)
+(Deny2)
+@SystemMessage @RT(Access denied,Session denied,Connection denied) #BGImage
+@SystemMessage Due to recent poor behaviour #BGImage
+@Variable[GNMPPoints]>=[100] @SystemMessage You can either report for chores or report for punishment #BGImage @Goto(StateCheck)
+@Variable[GNMPPoints]<[100] @SystemMessage I recommend reporting for chores #BGImage @Goto(StateCheck)
+(StartSession)
+@SystemMessage @RT(Access granted,Session granted,Connection granted,Connection succesful,Access succesful) #BGImage
+@SystemMessage Connecting.. #BGImage @SetDate(TeaseSession,0 Hours) @Interrupt(GNMStart)
+*********************************************************************CHORES*********************************************************************************************
+(Chores)
+@SystemMessage @RT(You suddenly remember you have some chores to do,You feel like doing chores,You want to do your chores,You know its time to do your chores..) #BGImage
+@NullResponse @CallReturn(CR\BackgroundMode\Chores\ChoreBase.txt)
+@NullResponse @Goto(StateCheck)
+***********************************************************************DUNGEON*******************************************************************************************
+(Dungeon)
+@FlagOr(BGImage1Active,BGImage1NNActive) @SystemMessage You @RT(press,push,tap,push down) the red button @RT(to go to your secret dungeon,and enter your secret dungeon,and slide down the stairs) @ShowImage[\GNMImages\GNMBackground\SecretDungeonStairs.*]
+@FlagOr(BGImage2Active,BGImage2NNActive) @SystemMessage You open the door @RT(to enter your dungeon,and enter your dungeon,and walk into your dungeon,and go through it into your dungeon) @ShowImage[\GNMImages\GNMBackground\SecretDungeonStairs.*]
+@FlagOr(BGImage3Active,BGImage3NNActive) @SystemMessage You @RT(press,push,tap,push down) the red button @RT(to go to your secret dungeon,and enter your secret dungeon,and slide down the stairs) @ShowImage[\GNMImages\GNMBackground\SecretDungeonStairs.*]
+@NullResponse @CallReturn(CR\BackgroundMode\Punishment\PunishmentBase.txt)
+@NullResponse @Goto(StateCheck)
+***********************************************************************SETTINGS*******************************************************************************************
+(Settings) //Ready to be implemented
+@FlagOr(BGImage1Active,BGImage1NNActive) @SystemMessage @RT(You feel like you want some change aiming for some very specific books,Longing for change you look to some special books,Wanting change you reach for some nice books) #BGImage
+@FlagOr(BGImage2Active,BGImage2NNActive) @SystemMessage @RT(You feel like you want some change so you open the top drawer on the shelves,Longing for change you look to the top shelve drawer,Wanting change you reach for some books in the top shelve drawer) #BGImage
+@FlagOr(BGImage3Active,BGImage3NNActive) @SystemMessage @RT(You feel like you want some change aiming for some very specific books,Longing for change you look to some special books,Wanting change you reach for some nice books) #BGImage
+@NullResponse @CallReturn(CR\Settings\SettingsBase.txt)
+@NullResponse @Goto(StateCheck)
+***********************************************************************FUN*******************************************************************************************
+(Fun) //Needs to be implemented with Var's counting times asked
+@FlagOr(BGImage1Active,BGImage1NNActive) @SystemMessage @RT(Looking for a little relaxation you aim for the comfy chair,Tired you go to the comfy chair,Overworked you go to the chair with the orange pillow) #BGImage
+@FlagOr(BGImage2Active,BGImage2NNActive) @SystemMessage @RT(You suddenly remember the note saying to relax a little,You look at the note reminding you to also relax) #BGImage
+@FlagOr(BGImage3Active,BGImage3NNActive) @SystemMessage @RT(Tired you aim for the bed,Wanting to relax you aim for the bed,Looking for some rest you lie down on the bed) #BGImage
+@NullResponse @CallReturn(CR\BackgroundMode\Primary\GNMFun.txt)
+@NullResponse @Goto(StateCheck)
+*************************************************************************SNACK*****************************************************************************************
+(Snack) //Needs update
+@FlagOr(BGImage1Active,BGImage1NNActive) @SystemMessage @RT(Thirsty for something other than food,Wanting something else than food,Looking for something different than food) you go to the drinks #BGImage
+@FlagOr(BGImage2Active,BGImage2NNActive) @SystemMessage @RT(Thirsty for something other than food,Wanting something else than food,Looking for something different than food) you open your snack drawer #BGImage
+@FlagOr(BGImage3Active,BGImage3NNActive) @SystemMessage @RT(Thirsty for something other than food,Wanting something else than food,Looking for something different than food) you open your snack drawer #BGImage
+@NullResponse @CallReturn(CR\BackgroundMode\Primary\GNMSnack.txt)
+@NullResponse @Goto(StateCheck)
+***************************************************************************EXERCISE***************************************************************************************
+(Exercise) //Needs to be completed..
+@SystemMessage @RT(You put on the shoes ready to exercise,You fetch the running shoes ready to do some exercise,You hurry for the pink running shoes) #BGImage
+@SystemMessage Exercise hasn't been implemented yet.. #BGImage @Goto(StateCheck)
+@NullResponse @CallReturn(CR\BackgroundMode\Exercise\GNMBackgroundExerciseBase.txt) #BGImage
+@NullResponse @Goto(StateCheck)
+***************************************************************************BUSYMODE***************************************************************************************
+(BusyMode)
+@FlagOr(BGImage1Active,BGImage1NNActive) @SystemMessage @RT(You sit down by the desk,You sit down in your leather office chair,You fetch some work and sit down in your office chair) #BGImage
+@FlagOr(BGImage2Active,BGImage2NNActive) @SystemMessage @RT(You place the binders in front of you,You fetch some work from the binders in front of you,You fetch the binders) #BGImage
+@FlagOr(BGImage3Active,BGImage3NNActive) @SystemMessage @RT(You retrieve some work from the shelves,You take some work from the shelves and take a seat in the couch) #BGImage
+@NullResponse @CallReturn(CR\BackgroundMode\BusyMode\GNMBusyMode.txt)
+@NullResponse @Goto(StateCheck)
+*************************************************************************PHONE*****************************************************************************************
+(Phone)
+@SystemMessage @SystemMessage @RT(You pick up your phone,You retrieve your phone,You get up and find your phone) @ShowImage[\GNMImages\GNMBackground\Phone.*]
+@NullResponse @CallReturn(CR\BackgroundMode\Primary\GNMPhone.txt)
+@NullResponse @Goto(StateCheck)
+************************************************************************Rules*************************************************************************************
+(Shop)
+@NullResponse @CallReturn(CR\BackgroundMode\Shop\Shop.txt)
+@NullResponse @Goto(StateCheck)
+(Rules)
+@NullResponse @CallReturn(CR\BackgroundMode\HouseRules.txt)
+@NullResponse @Goto(StateCheck)
+************************************************************************Hint*************************************************************************************
+(Hint) 
+@NullResponse @CallReturn(CR\BackgroundMode\BackgroundInfo.txt)
+@NullResponse @Goto(StateCheck)
